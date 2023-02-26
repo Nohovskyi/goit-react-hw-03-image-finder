@@ -13,11 +13,10 @@ export class App extends Component {
     images: [],
     currentPage: 1,
     totalHits: 0,
-    error: null,
-    status: 'idle',
     visibility: false,
     image: '',
     tags: '',
+    loading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,18 +26,22 @@ export class App extends Component {
       prevState.question !== question ||
       prevState.currentPage !== currentPage
     ) {
-      this.setState({ status: 'pending' });
+      this.setState({ loading: true });
       fetchImage(question, currentPage)
         .then(images =>
           this.setState(prevState => {
             return {
               images: [...prevState.images, ...images.hits],
-              status: 'resolved',
               totalHits: images.totalHits,
             };
           })
         )
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => console.log(error))
+        .finally(
+          this.setState({
+            loading: false,
+          })
+        );
     }
   }
 
@@ -70,32 +73,21 @@ export class App extends Component {
   };
 
   render() {
-    const {
-      error,
-      images,
-      status,
-      totalHits,
-      question,
-      image,
-      tags,
-      visibility,
-    } = this.state;
+    const { images, totalHits, question, image, tags, visibility, loading } =
+      this.state;
 
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
 
-        {status === 'idle' && <h2 className={css.text}>Введите имя фото</h2>}
-        {status === 'pending' && <Loader />}
-        {status === 'rejected' && <div>{error.message}</div>}
+        {question === '' && <h2 className={css.text}>Введите имя фото</h2>}
+        {loading && <Loader />}
 
-        {status === 'resolved' && (
-          <ImageGallery
-            images={images}
-            question={question}
-            clickOnImage={this.showToggleModal}
-          />
-        )}
+        <ImageGallery
+          images={images}
+          question={question}
+          clickOnImage={this.showToggleModal}
+        />
 
         {images.length >= 12 && (
           <Button

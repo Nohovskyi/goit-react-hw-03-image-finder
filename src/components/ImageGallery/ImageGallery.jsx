@@ -7,9 +7,6 @@ import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 export const ImageGallery = ({ question, images, clickOnImage }) => {
   return (
     <>
-      {images.length === 0 && (
-        <h3 className={css.text}>Нет фото с именем {question}</h3>
-      )}
       {images.length !== 0 && (
         <ul className={css.ImageGallery}>
           {images.map(item => {
