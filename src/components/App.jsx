@@ -33,15 +33,11 @@ export class App extends Component {
             return {
               images: [...prevState.images, ...images.hits],
               totalHits: images.totalHits,
+              loading: false,
             };
           })
         )
-        .catch(error => console.log(error))
-        .finally(
-          this.setState({
-            loading: false,
-          })
-        );
+        .catch(error => console.log(error));
     }
   }
 
@@ -81,7 +77,7 @@ export class App extends Component {
         <Searchbar onSubmit={this.handleFormSubmit} />
 
         {question === '' && <h2 className={css.text}>Введите имя фото</h2>}
-        {loading && <Loader />}
+        {loading === true && <Loader />}
 
         <ImageGallery
           images={images}
