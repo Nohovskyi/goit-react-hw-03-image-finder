@@ -77,7 +77,6 @@ export class App extends Component {
         <Searchbar onSubmit={this.handleFormSubmit} />
 
         {question === '' && <h2 className={css.text}>Введите имя фото</h2>}
-        {loading === true && <Loader />}
 
         <ImageGallery
           images={images}
@@ -94,6 +93,9 @@ export class App extends Component {
             }
           />
         )}
+
+        {loading === true && <Loader />}
+
         {visibility && (
           <Modal
             closeModal={this.showToggleModal}
